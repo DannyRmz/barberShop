@@ -19,35 +19,47 @@ struct LoginView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("Login")
-                    .font(.largeTitle)
+            ZStack {
+                Color.cyan.opacity(0.1)
+                    .ignoresSafeArea(.all)
                 
-                TextField("Email", text: $viewModel.email)
-                    .textFieldStyle(.roundedBorder)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
-                
-                SecureField("Password", text: $viewModel.password)
-                    .textFieldStyle(.roundedBorder)
-                
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                        .foregroundStyle(.red)
+                VStack(spacing: 20) {
+                    Spacer()
+                    Text("Login")
+                        .font(.largeTitle)
+                        .bold()
+                    
+                    TextField("Email", text: $viewModel.email)
+                        .keyboardType(.emailAddress)
+                        .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled(true)
+                    
+                    SecureField("Password", text: $viewModel.password)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    NavigationLink("Forgot password?") {
+                        ForgotPasswordView()
+                    }
+                    
+                    if let error = viewModel.errorMessage {
+                        Text(error)
+                            .foregroundStyle(.red)
+                    }
+                    
+                    Button("Login") {
+                        viewModel.login(users: users, session: session)
+                    }
+                    .disabled(viewModel.email.isEmpty || viewModel.password.isEmpty)
+                    
+                    Spacer()
+                    
+                    NavigationLink("Create account") {
+                        RegisterView()
+                    }
                 }
-                
-                Button("Login") {
-                    viewModel.login(users: users, session: session)
-                }
-                
-                NavigationLink("Create account") {
-                    RegisterView()
-                }
-                NavigationLink("Forgot password?") {
-                    ForgotPasswordView()
-                }
+                .padding()
             }
-            .padding()
         }
     }
 }

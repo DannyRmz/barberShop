@@ -15,8 +15,10 @@ struct ForgotPasswordView: View {
         VStack(spacing: 20) {
             Text("Recover Password")
                 .font(.largeTitle)
+                .bold()
             
             TextField("Enter your email", text: $email)
+                .keyboardType(.emailAddress)
                 .textFieldStyle(.roundedBorder)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)

@@ -16,6 +16,8 @@ struct MainView: View {
         NavigationStack {
             VStack(spacing: 20) {
                 Text("Welcome")
+                    .font(.largeTitle)
+                    .bold()
                 
                 if let user = session.currentUser {
                     Text(user.email)
