@@ -25,9 +25,16 @@ struct LoginView: View {
                 
                 TextField("Email", text: $viewModel.email)
                     .textFieldStyle(.roundedBorder)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
                 
                 SecureField("Password", text: $viewModel.password)
                     .textFieldStyle(.roundedBorder)
+                
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundStyle(.red)
+                }
                 
                 Button("Login") {
                     viewModel.login(users: users, session: session)

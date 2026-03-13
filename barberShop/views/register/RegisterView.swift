@@ -15,9 +15,6 @@ struct RegisterView: View {
     
     @StateObject var viewModel = RegisterViewModel()
     
-    @State private var email: String = ""
-    @State private var password: String = ""
-    
     var body: some View {
         VStack(spacing: 20) {
             Text("Create Account")
@@ -25,6 +22,8 @@ struct RegisterView: View {
             
             TextField("Email", text: $viewModel.email)
                 .textFieldStyle(.roundedBorder)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
             
             SecureField("Password", text: $viewModel.password)
                 .textFieldStyle(.roundedBorder)

@@ -18,6 +18,8 @@ struct ForgotPasswordView: View {
             
             TextField("Enter your email", text: $email)
                 .textFieldStyle(.roundedBorder)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
             
             Button("Send recobery email") {
                 print("Recovery requested for \(email)")

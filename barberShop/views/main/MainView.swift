@@ -13,15 +13,21 @@ struct MainView: View {
     @EnvironmentObject var session: SessionManager
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Welcome")
-            
-            if let user = session.currentUser {
-                Text(user.email)
-            }
-            
-            Button("Logout") {
-                session.logout()
+        NavigationStack {
+            VStack(spacing: 20) {
+                Text("Welcome")
+                
+                if let user = session.currentUser {
+                    Text(user.email)
+                }
+                
+                Button("Logout") {
+                    session.logout()
+                }
+                
+                NavigationLink("Users") {
+                    DataListView()
+                }
             }
         }
     }
