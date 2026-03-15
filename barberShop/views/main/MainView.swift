@@ -10,25 +10,12 @@ import SwiftData
 
 struct MainView: View {
     
-    @EnvironmentObject var session: SessionManager
-    
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 20) {
-                Text("Welcome")
-                    .font(.largeTitle)
-                    .bold()
-                
-                if let user = session.currentUser {
-                    Text(user.email)
-                }
-                
-                Button("Logout") {
-                    session.logout()
-                }
-                
-                NavigationLink("Users") {
-                    DataListView()
+        
+        TabView {
+            Tab("Appointment", systemImage: "calendar") {
+                NavigationStack {
+                    CalendarView()
                 }
             }
         }

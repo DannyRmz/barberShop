@@ -28,15 +28,9 @@ struct RegisterView: View {
                 CustomTextField(placeholder: "Email", text: $viewModel.email)
                     .keyboardType(.emailAddress)
                 
-                SecureField("Password", text: $viewModel.password)
-                    .padding()
-                    .background(Color.blue.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                CustomTextField(placeholder: "Password", text: $viewModel.password)
                 
-                SecureField("Confirm Password", text: $viewModel.confirmPassword)
-                    .padding()
-                    .background(Color.blue.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                CustomTextField(placeholder: "Password", text: $viewModel.password)
                 
                 Button("Register") {
                     viewModel.register(context: context, users: users)
