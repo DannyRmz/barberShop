@@ -12,22 +12,25 @@ struct ForgotPasswordView: View {
     @State private var email: String = ""
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Recover Password")
-                .font(.largeTitle)
-                .bold()
+        ZStack {
+            Color.cyan.opacity(0.1)
+                .ignoresSafeArea(.all)
             
-            TextField("Enter your email", text: $email)
-                .keyboardType(.emailAddress)
-                .textFieldStyle(.roundedBorder)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled(true)
-            
-            Button("Send recobery email") {
-                print("Recovery requested for \(email)")
+            VStack(spacing: 20) {
+                Text("Recover Password")
+                    .font(.largeTitle)
+                    .bold()
+                
+                CustomTextField(placeholder: "Enter your email", text: $email)
+                    .keyboardType(.emailAddress)
+                
+                Button("Send recobery email") {
+                    print("Recovery requested for \(email)")
+                }
+                .disabled(email.isEmpty)
             }
+            .padding()
         }
-        .padding()
     }
 }
 

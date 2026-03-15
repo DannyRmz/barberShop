@@ -29,14 +29,13 @@ struct LoginView: View {
                         .font(.largeTitle)
                         .bold()
                     
-                    TextField("Email", text: $viewModel.email)
+                    CustomTextField(placeholder: "Email", text: $viewModel.email)
                         .keyboardType(.emailAddress)
-                        .textFieldStyle(.roundedBorder)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled(true)
                     
                     SecureField("Password", text: $viewModel.password)
-                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                     
                     NavigationLink("Forgot password?") {
                         ForgotPasswordView()
