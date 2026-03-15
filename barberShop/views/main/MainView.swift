@@ -18,6 +18,12 @@ struct MainView: View {
                     CalendarView()
                 }
             }
+            
+            Tab("Profile", systemImage: "person") {
+                NavigationStack {
+                    ProfileView()
+                }
+            }
         }
     }
 }

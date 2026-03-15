@@ -17,25 +17,26 @@ struct RegisterView: View {
     
     var body: some View {
         ZStack {
-            Color.cyan.opacity(0.1)
-                .ignoresSafeArea(.all)
+            CustomBackground()
             
             VStack(spacing: 20) {
                 Text("Create Account")
                     .font(.largeTitle)
                     .bold()
                 
+                CustomTextField(placeholder: "Name", text: $viewModel.name)
+                
                 CustomTextField(placeholder: "Email", text: $viewModel.email)
                     .keyboardType(.emailAddress)
                 
-                CustomTextField(placeholder: "Password", text: $viewModel.password)
+                CustomSecureField(placeholder: "Password", text: $viewModel.password)
                 
-                CustomTextField(placeholder: "Password", text: $viewModel.password)
+                CustomSecureField(placeholder: "Password", text: $viewModel.confirmPassword)
                 
                 Button("Register") {
                     viewModel.register(context: context, users: users)
                 }
-                .disabled(viewModel.email.isEmpty || viewModel.password.isEmpty || viewModel.confirmPassword.isEmpty)
+                .disabled(viewModel.name.isEmpty || viewModel.email.isEmpty || viewModel.password.isEmpty || viewModel.confirmPassword.isEmpty)
                 
                 if let error = viewModel.errorMessage {
                     Text(error)

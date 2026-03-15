@@ -20,8 +20,7 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.cyan.opacity(0.1)
-                    .ignoresSafeArea(.all)
+                CustomBackground()
                 
                 VStack(spacing: 20) {
                     Spacer()
@@ -32,7 +31,7 @@ struct LoginView: View {
                     CustomTextField(placeholder: "Email", text: $viewModel.email)
                         .keyboardType(.emailAddress)
                     
-                    CustomTextField(placeholder: "Password", text: $viewModel.password)
+                    CustomSecureField(placeholder: "Password", text: $viewModel.password)
                     
                     NavigationLink("Forgot password?") {
                         ForgotPasswordView()

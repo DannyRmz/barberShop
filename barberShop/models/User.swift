@@ -10,11 +10,12 @@ import SwiftData
 @Model
 class User {
     
-    var userName: String?
+    var name: String
     var email: String
     var password: String
     
-    init(email: String, password: String) {
+    init(name: String, email: String, password: String) {
+        self.name = name
         self.email = email
         self.password = password
     }

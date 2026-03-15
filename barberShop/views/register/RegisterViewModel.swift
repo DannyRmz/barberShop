@@ -11,6 +11,7 @@ import Combine
 
 class RegisterViewModel: ObservableObject {
     
+    @Published var name: String = ""
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
@@ -19,7 +20,7 @@ class RegisterViewModel: ObservableObject {
     
     func register(context: ModelContext, users: [User]) {
         
-        guard !email.isEmpty, !password.isEmpty else {
+        guard !name.isEmpty, !email.isEmpty, !password.isEmpty else {
             errorMessage = "All fields are required"
             return
         }
@@ -39,7 +40,7 @@ class RegisterViewModel: ObservableObject {
             return
         }
         
-        let newUser = User(email: email, password: password)
+        let newUser = User(name: name, email: email, password: password)
         context.insert(newUser)
         
         errorMessage = nil

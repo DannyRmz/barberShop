@@ -13,8 +13,7 @@ struct ForgotPasswordView: View {
     
     var body: some View {
         ZStack {
-            Color.cyan.opacity(0.1)
-                .ignoresSafeArea(.all)
+            CustomBackground()
             
             VStack(spacing: 20) {
                 Text("Recover Password")

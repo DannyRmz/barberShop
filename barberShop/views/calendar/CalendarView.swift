@@ -14,21 +14,26 @@ struct CalendarView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("Welcome")
-                    .font(.largeTitle)
-                    .bold()
+            
+            ZStack {
+                CustomBackground()
                 
-                if let user = session.currentUser {
-                    Text(user.email)
-                }
-                
-                Button("Logout") {
-                    session.logout()
-                }
-                
-                NavigationLink("Users") {
-                    DataListView()
+                VStack(spacing: 20) {
+                    Text("Welcome")
+                        .font(.largeTitle)
+                        .bold()
+                    
+                    if let user = session.currentUser {
+                        Text(user.email)
+                    }
+                    
+                    Button("Logout") {
+                        session.logout()
+                    }
+                    
+                    NavigationLink("Users") {
+                        DataListView()
+                    }
                 }
             }
         }
