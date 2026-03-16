@@ -34,11 +34,14 @@ struct MyAppointmentsView: View {
                     }
                     
                     Spacer()
+                }
+                .swipeActions {
                     
-                    Button("Cancel") {
+                    Button(role: .destructive) {
                         viewModel.cancelAppointment(appointment)
+                    } label: {
+                        Label("Cancel", systemImage: "trash")
                     }
-                    .foregroundStyle(.red)
                 }
             }
         }

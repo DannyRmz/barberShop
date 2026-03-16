@@ -11,6 +11,8 @@ struct ProfileView: View {
     
     @EnvironmentObject var session: SessionManager
     
+    @State private var phone = ""
+    
     var body: some View {
         
         if let user = session.currentUser {
@@ -38,6 +40,13 @@ struct ProfileView: View {
                             .foregroundStyle(.secondary)
                         Text(user.email)
                             .font(.headline)
+                    }
+                    
+                    CustomTextField(placeholder: "Phone number", text: $phone)
+                        .keyboardType(.phonePad)
+                    
+                    Button("Save") {
+                        user.phone = phone
                     }
                     
                     Spacer()

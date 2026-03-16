@@ -18,6 +18,9 @@ struct CalendarView: View {
     
     @StateObject var viewModel = CalendarViewModel()
     
+    @State private var selectedSlot: String?
+    @State private var showConfirmation = false
+    
     var body: some View {
         NavigationStack {
             
@@ -33,8 +36,13 @@ struct CalendarView: View {
                    .datePickerStyle(.compact)
                    .padding()
                     
+                    let columns = [
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                    ]
+                    
                     ScrollView {
-                        LazyVStack(spacing: 8) {
+                        LazyVGrid(columns: columns, spacing: 8) {
                             
                             ForEach(viewModel.timeSlots, id: \.self) { slot in
                                 
@@ -43,20 +51,25 @@ struct CalendarView: View {
                                     appointments: appointments
                                 )
                                 
+                                let past = viewModel.isPastTime(slot: slot)
+                                
                                 TimeSlotRow(
                                     time: slot,
-                                    available: available
+                                    available: available && !past
                                 )
                                 .onTapGesture {
                                     
-                                    guard let email = session.currentUser?.email else { return }
+                                    guard available else { return }
+                                    guard !past else { return }
                                     
-                                    viewModel.book(
-                                        slot: slot,
-                                        userEmail: email,
-                                        appointments: appointments,
-                                        context: context
-                                    )
+                                    guard let user = session.currentUser else { return }
+                                    
+                                    guard user.phone != nil else {
+                                        return
+                                    }
+                                    
+                                    selectedSlot = slot
+                                    showConfirmation = true
                                 }
                             }
                         }
@@ -65,6 +78,27 @@ struct CalendarView: View {
                 }
                 .navigationTitle("Agenda")
             }
+        }
+        .alert("Confirm Appointment", isPresented: $showConfirmation) {
+            
+            Button("Confirm") {
+                
+                if let slot = selectedSlot, let user = session.currentUser {
+                    
+                    viewModel.book(
+                        slot: slot,
+                        user: user,
+                        appointments: appointments,
+                        context: context
+                    )
+                }
+                
+                selectedSlot = nil
+            }
+            
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Do you want to book this appointment?")
         }
     }
 }

@@ -30,32 +30,67 @@ class CalendarViewModel: ObservableObject {
         appointments: [Appointment]
     ) -> Bool {
         !appointments.contains {
-            calendar.isDate($0.date, inSameDayAs: selectedDate) && $0.timeSlot == slot
+            Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
+            && $0.timeSlot == slot
+            && !$0.isCancelled
         }
     }
     
     func book(
         slot: String,
-        userEmail: String,
+        user: User,
         appointments: [Appointment],
         context: ModelContext
     ) {
-        let exists = appointments.contains {
+        
+        let alradyBooked = userHasAppointmentToday(
+            appointments: appointments,
+            email: user.email
+        )
+        
+        guard !alradyBooked else { return }
+        
+        let appointment = Appointment(
+            date: selectedDate,
+            timeSlot: slot,
+            userEmail: user.email
+        )
+        
+        context.insert(appointment)
+    }
+    
+    func isPastTime(slot: String) -> Bool {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        
+        guard let slotTime = formatter.date(from: slot) else { return false }
+        
+        let calendar = Calendar.current
+        
+        let now = Date()
+        
+        let components = calendar.dateComponents([.hour, .minute], from: slotTime)
+        
+        let slotDate = calendar.date(
+            bySettingHour: components.hour!,
+            minute: components.minute!,
+            second: 0,
+            of: selectedDate
+        )!
+        
+        return slotDate < now
+    }
+    
+    func userHasAppointmentToday(
+        appointments: [Appointment],
+        email: String
+    ) -> Bool {
+        
+        appointments.contains {
             Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
-            && $0.timeSlot == slot
+            && $0.userEmail == email
             && !$0.isCancelled
-        }
-        
-        guard !exists else { return }
-        
-        if !exists {
-            let appointment = Appointment(
-                date: selectedDate,
-                timeSlot: slot,
-                userEmail: userEmail
-            )
-            
-            context.insert(appointment)
         }
     }
 }

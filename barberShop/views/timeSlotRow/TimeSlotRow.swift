@@ -24,10 +24,10 @@ struct TimeSlotRow: View {
                 .foregroundStyle(available ? .green : .red)
                 .strikethrough(!available)
         }
-        .padding()
         .frame(maxWidth: .infinity)
+        .padding()
         .background(
-            available ? Color.green.opacity(0.2) : Color.red.opacity(0.2)
+            available ? Color.green.opacity(0.1) : Color.red.opacity(0.1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
