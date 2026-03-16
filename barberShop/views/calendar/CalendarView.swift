@@ -11,6 +11,8 @@ import SwiftData
 
 struct CalendarView: View {
     
+    @Binding var selectedtab: Int
+    
     @Environment(\.modelContext) var context
     @EnvironmentObject var session: SessionManager
     
@@ -20,6 +22,7 @@ struct CalendarView: View {
     
     @State private var selectedSlot: String?
     @State private var showConfirmation = false
+    @State private var showAlert = false
     
     var body: some View {
         NavigationStack {
@@ -55,7 +58,8 @@ struct CalendarView: View {
                                 
                                 TimeSlotRow(
                                     time: slot,
-                                    available: available && !past
+                                    available: available,
+                                    past: past
                                 )
                                 .onTapGesture {
                                     
@@ -63,6 +67,11 @@ struct CalendarView: View {
                                     guard !past else { return }
                                     
                                     guard let user = session.currentUser else { return }
+                                    
+                                    if (user.phone ?? "").isEmpty {
+                                        showAlert = true
+                                        return
+                                    }
                                     
                                     guard user.phone != nil else {
                                         return
@@ -100,10 +109,18 @@ struct CalendarView: View {
         } message: {
             Text("Do you want to book this appointment?")
         }
+        .alert("Phone number required", isPresented: $showAlert) {
+            Button("Go to Profile") {
+                selectedtab = 2
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("You must add a phone number in your profile before booking an appointment.")
+        }
     }
 }
 
-#Preview {
-    CalendarView()
-        .environmentObject(SessionManager())
-}
+//#Preview {
+//    CalendarView(selectedtab: 0)
+//        .environmentObject(SessionManager())
+//}

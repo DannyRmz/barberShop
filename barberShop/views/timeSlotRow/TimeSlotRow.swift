@@ -11,6 +11,7 @@ struct TimeSlotRow: View {
     
     let time: String
     let available: Bool
+    let past: Bool
     
     var body: some View {
         
@@ -20,15 +21,27 @@ struct TimeSlotRow: View {
             
             Spacer()
             
-            Text(available ? "Available" : "Booked")
-                .foregroundStyle(available ? .green : .red)
-                .strikethrough(!available)
+            if past {
+                Label("Past", systemImage: "clock.fill")
+                    .foregroundStyle(.gray)
+            } else if available {
+                Label("Available", systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+            } else {
+                Label("Booked", systemImage: "xmark.circle.fill")
+                    .foregroundStyle(.red)
+            }
         }
-        .frame(maxWidth: .infinity)
         .padding()
         .background(
-            available ? Color.green.opacity(0.1) : Color.red.opacity(0.1)
+            RoundedRectangle(cornerRadius: 10)
+                .fill(backgroundColor)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+    
+    var backgroundColor: Color {
+        if past { return .gray.opacity(0.1) }
+        if available { return .green.opacity(0.1) }
+        return .red.opacity(0.1)
     }
 }

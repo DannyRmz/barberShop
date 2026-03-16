@@ -11,6 +11,8 @@ import SwiftData
 struct RegisterView: View {
     
     @Environment(\.modelContext) var context
+    @Environment(\.dismiss) var dismiss
+    
     @Query var users: [User]
     
     @StateObject var viewModel = RegisterViewModel()
@@ -35,6 +37,7 @@ struct RegisterView: View {
                 
                 Button("Register") {
                     viewModel.register(context: context, users: users)
+                    dismiss()
                 }
                 .disabled(viewModel.name.isEmpty || viewModel.email.isEmpty || viewModel.password.isEmpty || viewModel.confirmPassword.isEmpty)
                 

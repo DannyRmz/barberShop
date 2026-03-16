@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfileView: View {
     
     @EnvironmentObject var session: SessionManager
     
     @State private var phone = ""
+    @State private var isEditing = false
+    
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var profileImage: Image?
     
     var body: some View {
         
@@ -24,40 +29,108 @@ struct ProfileView: View {
                     HStack {
                         
                         Text(user.name)
-                            .font(.title)
-                            .bold()
+                            .font(.title2)
+                            .fontWeight(.semibold)
                         
                         Spacer()
                         
-                        Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.gray)
+                        PhotosPicker(selection: $selectedItem, matching: .images) {
+                            ZStack {
+                                if let data = user.profileImage,
+                                   let uiImage = UIImage(data: data) {
+                                    
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 120, height: 120)
+                                        .clipShape(Circle())
+                                    
+                                } else {
+                                    Image(systemName: "person.crop.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundStyle(.gray)
+                                }
+                                
+                                VStack {
+                                    Spacer()
+                                    
+                                    HStack {
+                                        Spacer()
+                                        
+                                        Image(systemName: "camera.fill")
+                                            .padding(6)
+                                            .background(.black.opacity(0.5))
+                                            .clipShape(Circle())
+                                            .foregroundStyle(.white)
+                                            
+                                    }
+                                }
+                                .padding(6)
+                            }
+                            .frame(width: 120, height: 120)
+                        }
                     }
                     
-                    VStack(alignment: .leading, spacing: 5) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Email")
                             .foregroundStyle(.secondary)
+                        
                         Text(user.email)
                             .font(.headline)
                     }
                     
-                    CustomTextField(placeholder: "Phone number", text: $phone)
-                        .keyboardType(.phonePad)
+                    Text("Phone")
+                        .foregroundStyle(.secondary)
                     
-                    Button("Save") {
-                        user.phone = phone
+                    HStack {
+                        if isEditing {
+                            CustomTextField(placeholder: "Phone number", text: $phone)
+                                .keyboardType(.phonePad)
+                            
+                        } else {
+                            Text(user.phone ?? "No phone number")
+                                .foregroundStyle(user.phone == nil ? .secondary : .primary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            if isEditing {
+                                user.phone = phone
+                            }
+                            
+                            isEditing.toggle()
+                        } label: {
+                            HStack {
+                                Image(systemName: isEditing ? "checkmark" : "pencil")
+                                Text(isEditing ? "Save" : "Edit")
+                            }
+                            .frame(width: 90)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(isEditing && phone.isEmpty)
                     }
+                    .frame(height: 36)
                     
                     Spacer()
-                    
                 }
                 .padding()
                 .navigationBarTitle("Profile")
+                .onChange(of: selectedItem) { _, newItem in
+                    Task {
+                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                            
+                            if let uiImage = UIImage(data: data) {
+                                user.profileImage = uiImage.jpegData(compressionQuality: 0.7)
+                            }
+                        }
+                    }
+                }
             }
-            
-        } else {
-            Text("No user logged in")
+            .onAppear {
+                phone = user.phone ?? ""
+            }
         }
     }
 }

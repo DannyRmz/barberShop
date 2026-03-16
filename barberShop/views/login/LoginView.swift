@@ -52,6 +52,17 @@ struct LoginView: View {
                     NavigationLink("Create account") {
                         RegisterView()
                     }
+                    
+//                    Button("Creat admin") {
+//                        let admin = User(
+//                            name: "Admin",
+//                            email: "admin@mail.com",
+//                            password: "123456",
+//                            phone: "5512345678",
+//                            isAdmin: true
+//                        )
+//                        context.insert(admin)
+//                    }
                 }
                 .padding()
             }

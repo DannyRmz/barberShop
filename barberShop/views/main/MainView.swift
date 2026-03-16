@@ -10,23 +10,30 @@ import SwiftData
 
 struct MainView: View {
     
+    @EnvironmentObject var session: SessionManager
+    @State private var selectedTab = 0
+    
     var body: some View {
         
-        TabView {
+        TabView(selection: $selectedTab) {
             
-            Tab("Agenda", systemImage: "calendar") {
+            Tab("Agenda", systemImage: "calendar", value: 0) {
                 NavigationStack {
-                    CalendarView()
+                    CalendarView(selectedtab: $selectedTab)
                 }
             }
             
-            Tab("Appointments", systemImage: "list.bullet") {
+            Tab("Appointments", systemImage: "list.bullet", value: 1) {
                 NavigationStack {
-                    MyAppointmentsView()
+                    if session.currentUser?.isAdmin == true {
+                        AdminAppointmentsView()
+                    } else {
+                        MyAppointmentsView()
+                    }
                 }
             }
             
-            Tab("Profile", systemImage: "person") {
+            Tab("Profile", systemImage: "person", value: 2) {
                 NavigationStack {
                     ProfileView()
                 }
