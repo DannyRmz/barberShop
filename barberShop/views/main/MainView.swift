@@ -13,9 +13,16 @@ struct MainView: View {
     var body: some View {
         
         TabView {
-            Tab("Appointment", systemImage: "calendar") {
+            
+            Tab("Agenda", systemImage: "calendar") {
                 NavigationStack {
                     CalendarView()
+                }
+            }
+            
+            Tab("Appointments", systemImage: "list.bullet") {
+                NavigationStack {
+                    MyAppointmentsView()
                 }
             }
             

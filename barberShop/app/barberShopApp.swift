@@ -18,6 +18,6 @@ struct barberShopApp: App {
             RootView()
                 .environmentObject(session)
         }
-        .modelContainer(for: User.self)
+        .modelContainer(for: [ User.self, Appointment.self])
     }
 }

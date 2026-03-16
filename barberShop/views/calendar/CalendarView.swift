@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 struct CalendarView: View {
     
+    @Environment(\.modelContext) var context
     @EnvironmentObject var session: SessionManager
+    
+    @Query var appointments: [Appointment]
+    
+    @StateObject var viewModel = CalendarViewModel()
     
     var body: some View {
         NavigationStack {
@@ -18,23 +24,46 @@ struct CalendarView: View {
             ZStack {
                 CustomBackground()
                 
-                VStack(spacing: 20) {
-                    Text("Welcome")
-                        .font(.largeTitle)
-                        .bold()
+                VStack {
+                   DatePicker(
+                    "Select date",
+                    selection: $viewModel.selectedDate,
+                    displayedComponents: .date
+                   )
+                   .datePickerStyle(.compact)
+                   .padding()
                     
-                    if let user = session.currentUser {
-                        Text(user.email)
-                    }
-                    
-                    Button("Logout") {
-                        session.logout()
-                    }
-                    
-                    NavigationLink("Users") {
-                        DataListView()
+                    ScrollView {
+                        LazyVStack(spacing: 8) {
+                            
+                            ForEach(viewModel.timeSlots, id: \.self) { slot in
+                                
+                                let available = viewModel.isAvailable(
+                                    slot: slot,
+                                    appointments: appointments
+                                )
+                                
+                                TimeSlotRow(
+                                    time: slot,
+                                    available: available
+                                )
+                                .onTapGesture {
+                                    
+                                    guard let email = session.currentUser?.email else { return }
+                                    
+                                    viewModel.book(
+                                        slot: slot,
+                                        userEmail: email,
+                                        appointments: appointments,
+                                        context: context
+                                    )
+                                }
+                            }
+                        }
+                        .padding()
                     }
                 }
+                .navigationTitle("Agenda")
             }
         }
     }
