@@ -11,6 +11,7 @@ import SwiftData
 @Model
 class User {
     
+    var id: UUID
     var name: String
     var email: String
     var password: String
@@ -19,7 +20,8 @@ class User {
     
     var profileImage: Data?
     
-    init(name: String, email: String, password: String, phone: String? = nil, isAdmin: Bool = false) {
+    init(id: UUID = UUID(), name: String, email: String, password: String, phone: String? = nil, isAdmin: Bool = false) {
+        self.id = id
         self.name = name
         self.email = email
         self.password = password

@@ -41,8 +41,9 @@ struct ProfileView: View {
                                     
                                     Image(uiImage: uiImage)
                                         .resizable()
-                                        .scaledToFit()
+                                        .scaledToFill()
                                         .frame(width: 120, height: 120)
+                                        .clipped()
                                         .clipShape(Circle())
                                     
                                 } else {
@@ -114,6 +115,15 @@ struct ProfileView: View {
                     .frame(height: 36)
                     
                     Spacer()
+                    
+                    Button(role: .destructive) {
+                        session.logout()
+                    } label: {
+                        Text("Log Out")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top)
                 }
                 .padding()
                 .navigationBarTitle("Profile")

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RootView: View {
     
     @EnvironmentObject var session: SessionManager
+    @Query var users: [User]
     
     var body: some View {
         Group {
@@ -18,6 +20,9 @@ struct RootView: View {
             } else {
                 LoginView()
             }
+        }
+        .onAppear {
+            session.restoreSession(users: users)
         }
     }
 }
