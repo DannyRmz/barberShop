@@ -16,7 +16,10 @@ class RegisterViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
     
+    @Published var createdUser: User?
+    
     @Published var errorMessage: String?
+    @Published var didRegisterSuccessfully = false
     
     func register(context: ModelContext, users: [User]) {
         
@@ -40,9 +43,15 @@ class RegisterViewModel: ObservableObject {
             return
         }
         
-        let newUser = User(name: name, email: email, password: password)
+        let cleanEmail = email
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        
+        let newUser = User(name: name, email: cleanEmail, password: password)
         context.insert(newUser)
         
+        createdUser = newUser
         errorMessage = nil
+        didRegisterSuccessfully = true
     }
 }

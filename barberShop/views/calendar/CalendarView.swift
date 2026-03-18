@@ -23,6 +23,7 @@ struct CalendarView: View {
     @State private var selectedSlot: String?
     @State private var showConfirmation = false
     @State private var showAlert = false
+    @State private var showSameAlert = false
     
     var body: some View {
         NavigationStack {
@@ -65,8 +66,18 @@ struct CalendarView: View {
                                     
                                     guard available else { return }
                                     guard !past else { return }
-                                    
                                     guard let user = session.currentUser else { return }
+                                    
+                                    let hasAppointmentToday = appointments.contains {
+                                        $0.userEmail == user.email &&
+                                        Calendar.current.isDate($0.date, inSameDayAs: viewModel.selectedDate) &&
+                                        !$0.isCancelled
+                                    }
+                                    
+                                    if hasAppointmentToday {
+                                        showSameAlert = true
+                                        return
+                                    }
                                     
                                     if (user.phone ?? "").isEmpty {
                                         showAlert = true
@@ -116,6 +127,9 @@ struct CalendarView: View {
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("You must add a phone number in your profile before booking an appointment.")
+        }
+        .alert("You already have an appointment today", isPresented: $showSameAlert) {
+            Button("OK", role: .cancel) { }
         }
     }
 }

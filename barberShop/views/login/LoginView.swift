@@ -40,6 +40,7 @@ struct LoginView: View {
                     if let error = viewModel.errorMessage {
                         Text(error)
                             .foregroundStyle(.red)
+                            .font(.caption)
                     }
                     
                     Button("Login") {

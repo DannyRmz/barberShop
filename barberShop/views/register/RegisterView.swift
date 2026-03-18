@@ -13,6 +13,8 @@ struct RegisterView: View {
     @Environment(\.modelContext) var context
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var session: SessionManager
+    
     @Query var users: [User]
     
     @StateObject var viewModel = RegisterViewModel()
@@ -35,10 +37,16 @@ struct RegisterView: View {
                 
                 CustomSecureField(placeholder: "Password", text: $viewModel.confirmPassword)
                 
-                Button("Register") {
+//                Button("Register") {
+//                    viewModel.register(context: context, users: users)
+//                }
+                Button {
                     viewModel.register(context: context, users: users)
-                    dismiss()
+                } label: {
+                    Text("Register")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(viewModel.name.isEmpty || viewModel.email.isEmpty || viewModel.password.isEmpty || viewModel.confirmPassword.isEmpty)
                 
                 if let error = viewModel.errorMessage {
@@ -48,9 +56,18 @@ struct RegisterView: View {
             }
             .padding()
         }
+        .onChange(of: viewModel.didRegisterSuccessfully) { _, success in
+            if success, let user = viewModel.createdUser {
+                
+                session.login(user: user)
+                
+                dismiss()
+            }
+        }
     }
 }
 
 #Preview {
     RegisterView()
+        .environmentObject(SessionManager())
 }

@@ -27,6 +27,9 @@ class LoginViewModel: ObservableObject {
             $0.email == email && $0.password == password
         }) {
             session.login(user: user)
+        } else {
+            errorMessage = "Invalid credentials"
+            return
         }
     }
 }
