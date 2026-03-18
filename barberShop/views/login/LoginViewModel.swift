@@ -17,19 +17,25 @@ class LoginViewModel: ObservableObject {
     
     func login(users: [User], session: SessionManager) {
         
-        guard !email.isEmpty, !password.isEmpty else {
+        let cleanEmail = email
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        
+        guard !cleanEmail.isEmpty, !password.isEmpty else {
             errorMessage = "All fields are required"
             return
         }
         
         
         if let user = users.first(where: {
-            $0.email == email && $0.password == password
+            $0.email == cleanEmail && $0.password == password
         }) {
+            
+            errorMessage = nil
             session.login(user: user)
+            
         } else {
             errorMessage = "Invalid credentials"
-            return
         }
     }
 }

@@ -37,21 +37,25 @@ struct RegisterView: View {
                 
                 CustomSecureField(placeholder: "Password", text: $viewModel.confirmPassword)
                 
-//                Button("Register") {
-//                    viewModel.register(context: context, users: users)
-//                }
                 Button {
                     viewModel.register(context: context, users: users)
                 } label: {
                     Text("Register")
                         .frame(maxWidth: .infinity)
+                        .frame(height: 50)
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(viewModel.name.isEmpty || viewModel.email.isEmpty || viewModel.password.isEmpty || viewModel.confirmPassword.isEmpty)
+                .disabled(
+                    viewModel.name.isEmpty ||
+                    viewModel.email.isEmpty ||
+                    viewModel.password.isEmpty ||
+                    viewModel.confirmPassword.isEmpty
+                )
                 
                 if let error = viewModel.errorMessage {
                     Text(error)
                         .foregroundStyle(.red)
+                        .font(.caption)
                 }
             }
             .padding()
@@ -61,8 +65,24 @@ struct RegisterView: View {
                 
                 session.login(user: user)
                 
-                dismiss()
+                viewModel.name = ""
+                viewModel.email = ""
+                viewModel.password = ""
+                viewModel.confirmPassword = ""
+                viewModel.errorMessage = nil
             }
+        }
+        
+        .onChange(of: viewModel.email) { _, _ in
+            viewModel.errorMessage = nil
+        }
+        
+        .onChange(of: viewModel.password) { _, _ in
+            viewModel.errorMessage = nil
+        }
+        
+        .onChange(of: viewModel.confirmPassword) { _, _ in
+            viewModel.errorMessage = nil
         }
     }
 }

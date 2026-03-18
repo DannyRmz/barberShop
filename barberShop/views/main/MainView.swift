@@ -38,6 +38,14 @@ struct MainView: View {
                     ProfileView()
                 }
             }
+            
+            if session.currentUser?.isAdmin == true {
+                Tab("Admin", systemImage: "chart.bar", value: 3) {
+                    NavigationStack {
+                        AdminDashboardView()
+                    }
+                }
+            }
         }
     }
 }
