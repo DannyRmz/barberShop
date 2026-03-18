@@ -15,11 +15,13 @@ class Appointment {
     var timeSlot: String
     var userEmail: String
     var isCancelled: Bool
+    var isBlocked: Bool
     
     init(date: Date, timeSlot: String, userEmail: String) {
         self.date = date
         self.timeSlot = timeSlot
         self.userEmail = userEmail
         self.isCancelled = false
+        self.isBlocked = false
     }
 }

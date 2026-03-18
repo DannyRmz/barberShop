@@ -13,10 +13,12 @@ struct AdminAppointmentsView: View {
     @Query var appointments: [Appointment]
     @Query var users: [User]
     
+    @StateObject var viewModel = AdminAppointmentsViewModel()
+    
     var body: some View {
         List {
-            ForEach(appointments.filter { !$0.isCancelled }) { appointment in
-                if let user = users.first(where: { $0.email == appointment.userEmail }) {
+            ForEach(viewModel.activeAppointments(from: appointments)) { appointment in
+                if let user = viewModel.user(for: appointment, users: users) {
                     
                     VStack(alignment: .leading) {
                         Text(user.name)
@@ -33,7 +35,7 @@ struct AdminAppointmentsView: View {
                     }
                     .swipeActions {
                         Button(role: .destructive) {
-                            appointment.isCancelled = true
+                            viewModel.cancel(appointment)
                         } label: {
                             Label("Cancel", systemImage: "trash")
                         }
@@ -41,9 +43,11 @@ struct AdminAppointmentsView: View {
                 }
             }
         }
+        .navigationTitle("Admin Panel")
     }
 }
 
 #Preview {
     AdminAppointmentsView()
+        .environmentObject(SessionManager())
 }
