@@ -44,10 +44,14 @@ struct AdminAppointmentsView: View {
             }
         }
         .navigationTitle("Admin Panel")
+        .scrollContentBackground(.hidden)
+        .background(CustomBackground())
     }
 }
 
 #Preview {
-    AdminAppointmentsView()
-        .environmentObject(SessionManager())
+    NavigationStack {
+        AdminAppointmentsView()
+            .environmentObject(SessionManager())
+    }
 }

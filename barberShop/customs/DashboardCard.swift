@@ -32,3 +32,7 @@ struct DashboardCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
+
+#Preview {
+    DashboardCard(title: "Title", value: "Value", icon: "person")
+}

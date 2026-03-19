@@ -16,64 +16,70 @@ struct AdminDashboardView: View {
     @StateObject var viewModel = AdminDashboardViewModel()
     
     var body: some View {
-        ScrollView {
-            VStack {
-                
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ]) {
+        ZStack {
+            CustomBackground()
+            
+            ScrollView {
+                VStack {
                     
-                    DashboardCard(
-                        title: "Today",
-                        value: "\(viewModel.appointmentsToday(appointments).count)",
-                        icon: "calendar"
-                    )
-                    
-                    DashboardCard(
-                        title: "Users",
-                        value: "\(viewModel.totalUsers(users))",
-                        icon: "person.3"
-                    )
-                    
-                    DashboardCard(
-                        title: "Today",
-                        value: "\(viewModel.bookedSlotsToday(appointments))",
-                        icon: "clock"
-                    )
-                    
-                    DashboardCard(
-                        title: "Upcoming",
-                        value: "\(viewModel.upcomingAppointments(appointments).count)",
-                        icon: "list.bullet"
-                    )
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Upcoming Appointments")
-                        .font(.headline)
-                    
-                    ForEach(viewModel.upcomingAppointments(appointments)) { appointment in
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ]) {
                         
-                        VStack(alignment: .leading) {
-                            Text(appointment.timeSlot)
-                            Text(appointment.date.formatted())
-                                .font(.caption)
-                                .foregroundStyle(.gray)
+                        DashboardCard(
+                            title: "Today",
+                            value: "\(viewModel.appointmentsToday(appointments).count)",
+                            icon: "calendar"
+                        )
+                        
+                        DashboardCard(
+                            title: "Users",
+                            value: "\(viewModel.totalUsers(users))",
+                            icon: "person.3"
+                        )
+                        
+                        DashboardCard(
+                            title: "Today",
+                            value: "\(viewModel.bookedSlotsToday(appointments))",
+                            icon: "clock"
+                        )
+                        
+                        DashboardCard(
+                            title: "Upcoming",
+                            value: "\(viewModel.upcomingAppointments(appointments).count)",
+                            icon: "list.bullet"
+                        )
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        Text("Upcoming Appointments")
+                            .font(.headline)
+                        
+                        ForEach(viewModel.upcomingAppointments(appointments)) { appointment in
+                            
+                            VStack(alignment: .leading) {
+                                Text(appointment.timeSlot)
+                                Text(appointment.date.formatted())
+                                    .font(.caption)
+                                    .foregroundStyle(.gray)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(.ultraThinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                 }
+                .padding()
             }
-            .padding()
+            .navigationTitle("Dashboard")
         }
-        .navigationTitle("Dashboard")
     }
 }
 
 #Preview {
-    AdminDashboardView()
+    NavigationStack {
+        AdminDashboardView()
+    }
 }
